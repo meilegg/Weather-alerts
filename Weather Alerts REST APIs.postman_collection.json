@@ -1,0 +1,176 @@
+{
+	"info": {
+		"_postman_id": "8146331c-cc5e-4d42-bdbe-a3dd376f6de6",
+		"name": "Weather Alerts REST APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24883378"
+	},
+	"item": [
+		{
+			"name": "Alerts count",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Alerts count on land\",() => {\r",
+							"pm.response.to.have.status(200);\r",
+							"pm.expect(pm.response.text()).to.include(\"land\");\r",
+							"});\r",
+							"console.log('Alerts count on land: ' + pm.response.json()[\"land\"])\r",
+							"\r",
+							"pm.test(\"Alerts count in Illinois\",() => {\r",
+							"pm.response.to.have.status(200);\r",
+							"pm.expect(pm.response.text()).to.include(\"IL\");\r",
+							"});\r",
+							"console.log('Alerts count in Illinois: ' + pm.response.json().areas.IL)\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/alerts/active/count",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"alerts",
+						"active",
+						"count"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Extreme weather alerts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Extreme weather alerts\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.text()).to.include(\"Extreme\");\r",
+							"\r",
+							"    var jsonData = pm.response.json();\r",
+							"    let extremeCount = 0;\r",
+							"    pm.expect(jsonData).to.have.property(\"features\");\r",
+							"\r",
+							"    jsonData.features.forEach(function(feature) {\r",
+							"        pm.expect(feature).to.have.property(\"properties\");\r",
+							"        pm.expect(feature.properties).to.have.property(\"severity\");\r",
+							"        const severity = feature.properties.severity;\r",
+							"        if(severity == \"Extreme\") {\r",
+							"            extremeCount++;\r",
+							"        }\r",
+							"    });\r",
+							"\r",
+							"  if (extremeCount === 0) {\r",
+							"        console.log(\"No extreme weather alerts found\");\r",
+							"    } else {\r",
+							"        console.log(\"Extreme alerts count: \" + extremeCount);\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/alerts/active?severity=Extreme",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"alerts",
+						"active"
+					],
+					"query": [
+						{
+							"key": "severity",
+							"value": "Extreme"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Severe weather alerts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Severe weather alerts\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.expect(pm.response.text()).to.include(\"Severe\");\r",
+							"\r",
+							"    var jsonData = pm.response.json();\r",
+							"    let severeCount = 0;\r",
+							"    pm.expect(jsonData).to.have.property(\"features\");\r",
+							"\r",
+							"    jsonData.features.forEach(function(feature) {\r",
+							"        pm.expect(feature).to.have.property(\"properties\");\r",
+							"        pm.expect(feature.properties).to.have.property(\"severity\");\r",
+							"        const severity = feature.properties.severity;\r",
+							"        if(severity == \"Severe\") {\r",
+							"            severeCount++;\r",
+							"        }\r",
+							"    });\r",
+							"\r",
+							"  if (severeCount === 0) {\r",
+							"        console.log(\"No severe weather alerts found\");\r",
+							"    } else {\r",
+							"        console.log(\"Severe alerts count: \" + severeCount);\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/alerts/active?severity=Severe",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"alerts",
+						"active"
+					],
+					"query": [
+						{
+							"key": "severity",
+							"value": "Severe"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://api.weather.gov"
+		}
+	]
+}
